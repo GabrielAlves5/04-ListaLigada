@@ -1,7 +1,7 @@
-#include <iostream>
+ï»¿#include <iostream>
 using namespace std;
 
-// definição de tipo
+// definiï¿½ï¿½o de tipo
 struct NO {
     int valor;
     NO* prox;
@@ -9,6 +9,7 @@ struct NO {
 };
 
 NO* primeiro = NULL;
+NO* ultimo = NULL;
 
 // headers
 void menu();
@@ -20,6 +21,7 @@ void excluirElemento();
 void buscarElemento();
 NO* posicaoElemento(int numero);
 //--------------------------
+
 
 
 int main()
@@ -73,7 +75,7 @@ void menu()
 void inicializar()
 {
 
-    // se a lista já possuir elementos
+    // se a lista jï¿½ possuir elementos
     // libera a memoria ocupada
     NO* aux = primeiro;
     while (aux != NULL) {
@@ -83,6 +85,7 @@ void inicializar()
     }
 
     primeiro = NULL;
+    ultimo = NULL;
     cout << "Lista inicializada \n";
 
 }
@@ -132,6 +135,7 @@ void inserirElemento()
     if (primeiro == NULL)
     {
         primeiro = novo;
+        ultimo = novo;
     }
     else {
         if (posicaoElemento(novo->valor) != NULL) {
@@ -144,6 +148,8 @@ void inserirElemento()
             aux = aux->prox;
         }
         aux->prox = novo;
+        ultimo = aux->prox;
+        ultimo->prox = NULL;
         novo->ant = aux;
     }
 }
@@ -155,53 +161,34 @@ void excluirElemento()
     cin >> valor;
 
     // Busca o elemento
-    //Aqui ele ta pegando o valor e colocando pra ver se ta no nó
-    NO* nmdel = posicaoElemento(valor);
+    //Aqui ele ta pegando o valor e colocando pra ver se ta no no
+    NO* apagar = posicaoElemento(valor);
     //se for nulo ele fala q n tem
-    if (nmdel == NULL) {
+    if (apagar == NULL) {
         cout << "Coloca um numero que existe pra inicio de conversa" << endl;
+        free(apagar);
         return;
     }
-
-    // Se for o único elemento (primeiro e último são o mesmo)
-    //vai ver se o anterior e o porximo é nulo
-    if (nmdel->ant == NULL  && nmdel->prox == NULL) {
-        //define o primeiro como nulo e limpa tudo
-        primeiro = NULL;
-        free(nmdel);
-        cout << "A-PA-GA-DO" << endl;
+    //apaga o ultimo
+    if (ultimo->valor == valor)
+    {
+        ultimo = ultimo->ant;
+        ultimo->prox = NULL;
+        free(apagar);
         return;
     }
-
-    // Se for o primeiro nó
-    //vai ver so o anterior é alguem
-    if (nmdel->ant == NULL) {
-    //o primeiro vira o numero seguinte
-        primeiro = nmdel->prox;
-        nmdel->prox->ant = NULL;
-        free(nmdel);
-        cout << "A-PA-GA-DO" << endl;
-        return;
+    if (primeiro->valor == valor)
+    {
+        primeiro = primeiro->prox;
+        free(apagar);
+    }
+    else {
+        apagar->ant->prox = apagar->prox;
+        apagar->prox->ant = apagar->ant;
+        free(apagar);
     }
 
-    // Se for o último nó
-    //ver se o ultimo é realmente o ultimo
-    if (nmdel->prox == NULL) {
-    //vai fazer o antes dele ser NULL
-        nmdel->ant->prox = NULL;
-        free(nmdel);
-        cout << "A-PA-GA-DO" << endl;
-        return;
-    }
 
-    // Se for um nó do meio
-    //o proximo vai pro proximo e o anterior mantem antes
-    nmdel->ant->prox = nmdel->prox;
-    nmdel->prox->ant = nmdel->ant;
-    //aqui ja mata
-    free(nmdel);
-    cout << "A-PA-GA-DO" << endl;
-    
 }
 
 void buscarElemento()
@@ -212,7 +199,7 @@ void buscarElemento()
 
     NO* elemento = posicaoElemento(b);
     if (elemento != NULL) {
-     
+
     }
     else {
         cout << "nem tem esse numero" << endl;
@@ -222,7 +209,7 @@ void buscarElemento()
 
 
 // retorna um ponteiro para o elemento buscado
-// ou NULL se o elemento não estiver na lista
+// ou NULL se o elemento nï¿½o estiver na lista
 NO* posicaoElemento(int numero)
 {
     NO* aux = primeiro;
